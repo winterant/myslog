@@ -11,11 +11,11 @@ import (
 var defaultLogger *slog.Logger
 
 func init() {
-	defaultLogger = slog.New(NewPrettyHandler(WithWriter(os.Stdout), WithLever(slog.LevelInfo), WithCallerDepth(1)))
+	defaultLogger = slog.New(NewPrettyHandler(WithWriter(os.Stdout), WithLever(slog.LevelInfo), WithCallerDepth(2)))
 }
 
 func InitDefaultLogger(writer io.Writer, logLevel slog.Level, options ...HandlerOption) {
-	options = append(options, WithWriter(writer), WithLever(logLevel), WithCallerDepth(1))
+	options = append(options, WithWriter(writer), WithLever(logLevel), WithCallerDepth(2))
 	defaultLogger = slog.New(NewPrettyHandler(options...))
 }
 

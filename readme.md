@@ -49,8 +49,8 @@ func main() {
 日志：
 
 ```
-2024-10-01 21:09:29.349351 DEBUG /Users/jinglong/Projects/github/myslog/myslog-github/logger.go:32 [taskId=tsk-thisisataskid] process is starting...
-2024-10-01 21:09:29.350011 INFO  /Users/jinglong/Projects/github/myslog/myslog-github/logger.go:36 [taskId=tsk-thisisataskid] My name is Winterant.
+2024-10-02 11:42:17.227797 DEBUG /Users/jinglong/Projects/github/myslog/main.go:33 [taskId=tsk-thisisataskid] process is starting...
+2024-10-02 11:42:17.228035 INFO  /Users/jinglong/Projects/github/myslog/main.go:36 [taskId=tsk-thisisataskid] My name is Winterant.
 ```
 
 ### 使用原生slog.Logger
