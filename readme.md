@@ -14,12 +14,6 @@ go get -u github.com/winterant/myslog
 
 日志将输出到`os.Stdout`和文件`./log/main.log`。
 
-<style>
-pre {
-    tab-size: 4;
-}
-</style>
-
 ```go
 package main
 
