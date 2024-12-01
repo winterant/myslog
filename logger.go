@@ -6,24 +6,9 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
-	"os"
-
-	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 var defaultLogger *slog.Logger
-
-func init() {
-	writers := io.MultiWriter(&lumberjack.Logger{
-		Filename:   "./log/main.log", // 日志文件的位置
-		MaxSize:    128,              // 文件最大大小（单位MB）
-		MaxBackups: 0,                // 保留的最大旧文件数量
-		MaxAge:     90,               // 保留旧文件的最大天数
-		Compress:   false,            // 是否压缩/归档旧文件
-		LocalTime:  true,             // 使用本地时间创建时间戳
-	}, os.Stdout)
-	InitDefaultLogger(writers, slog.LevelDebug)
-}
 
 // InitDefaultLogger reinitializes the default logger instead of acquiescent.
 func InitDefaultLogger(writer io.Writer, logLevel slog.Level, options ...HandlerOption) {
@@ -34,11 +19,11 @@ func InitDefaultLogger(writer io.Writer, logLevel slog.Level, options ...Handler
 // ContextWithArgs returns a context with key-values which myslog will print.
 func ContextWithArgs(ctx context.Context, kvs ...any) context.Context {
 	var args []any
-	if ctxKv := ctx.Value(contextArgsKey); ctxKv != nil {
+	if ctxKv := ctx.Value(&contextArgsKey); ctxKv != nil {
 		args = ctxKv.([]any)
 	}
 	args = append(args, kvs...)
-	return context.WithValue(ctx, contextArgsKey, args)
+	return context.WithValue(ctx, &contextArgsKey, args)
 }
 
 func Debug(ctx context.Context, format string, args ...any) {

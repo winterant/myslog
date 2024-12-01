@@ -11,7 +11,7 @@ import (
 	"sync"
 )
 
-const contextArgsKey = "myslog_context_args_uniqk"
+var contextArgsKey int
 
 // PrettyHandler implements a slog handler with pretty format as easy to view.
 type PrettyHandler struct {
@@ -112,11 +112,9 @@ func (h *PrettyHandler) Handle(ctx context.Context, r slog.Record) error {
 }
 
 func getContextArgs(ctx context.Context) []any {
-	v := ctx.Value(contextArgsKey)
+	v := ctx.Value(&contextArgsKey)
 	if v != nil {
-		if arr, ok := ctx.Value(contextArgsKey).([]any); ok {
-			return arr
-		}
+		return v.([]any)
 	}
-	return make([]any, 0)
+	return nil
 }

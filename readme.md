@@ -24,24 +24,22 @@ import (
 )
 
 func main() {
-	ctx := myslog.ContextWithArgs(context.Background(), "taskId", "tsk-thisisataskid") // 利用context确保每一条都输出某些信息
-
+	ctx := myslog.ContextWithArgs(context.Background(), "taskId", "tsk-thisisataskid", "tag", "mytag") // 利用context确保每一条都输出某些信息
 	myslog.Debug(ctx, "(acquiescent myslog.Logger)process is starting...")
-
-	name := "Winterant"
-	myslog.Info(ctx, "My name is %s.", name)
+	myslog.Info(ctx, "My name is %s.", "Winterant")
 }
-
 ```
 
 日志：
 
 ```
-2024-10-02 12:21:32.365340 DEBUG /Users/jinglong/Projects/github/myslog/main.go:12 [taskId=tsk-thisisataskid] process is starting...
-2024-10-02 12:21:32.365816 INFO  /Users/jinglong/Projects/github/myslog/main.go:15 [taskId=tsk-thisisataskid] My name is Winterant.
+2024-10-02 12:21:32.365340 DEBUG /Users/jinglong/Projects/github/myslog/main.go:12 [taskId=tsk-thisisataskid] [tag=mytag] process is starting...
+2024-10-02 12:21:32.365816 INFO  /Users/jinglong/Projects/github/myslog/main.go:15 [taskId=tsk-thisisataskid] [tag=mytag] My name is Winterant.
 ```
 
 ### 手动初始化默认logger
+
+只需添加一个init函数
 
 ```go
 package main
@@ -56,7 +54,7 @@ import (
 	"github.com/winterant/myslog"
 )
 
-func InitLogger() {
+func init() {
 	// 自行指定日志输出目标
 	writers := io.MultiWriter(&lumberjack.Logger{
 		Filename:   "./log/main.log", // 日志文件的位置
@@ -66,29 +64,22 @@ func InitLogger() {
 		Compress:   false,            // 是否压缩/归档旧文件
 		LocalTime:  true,             // 使用本地时间创建时间戳
 	}, os.Stdout)
-
 	myslog.InitDefaultLogger(writers, slog.LevelDebug)
 }
 
 func main() {
 	ctx := context.Background()
-
-	InitLogger()
-
-	ctx = myslog.ContextWithArgs(ctx, "taskId", "tsk-thisisataskid") // 利用context确保每一条都输出某些信息
-
+	ctx = myslog.ContextWithArgs(ctx, "taskId", "tsk-thisisataskid", "tag", "mytag") // 利用context确保每一条都输出某些信息
 	myslog.Debug(ctx, "process is starting...")
-
-	name := "Winterant"
-	myslog.Info(ctx, "My name is %s.", name)
+	myslog.Info(ctx, "My name is %s.", "Winterant")
 }
 ```
 
 日志：
 
 ```
-2024-10-02 11:42:17.227797 DEBUG /Users/jinglong/Projects/github/myslog/main.go:34 [taskId=tsk-thisisataskid] process is starting...
-2024-10-02 11:42:17.228035 INFO  /Users/jinglong/Projects/github/myslog/main.go:37 [taskId=tsk-thisisataskid] My name is Winterant.
+2024-10-02 11:42:17.227797 DEBUG /Users/jinglong/Projects/github/myslog/main.go:34 [taskId=tsk-thisisataskid] [tag=mytag] process is starting...
+2024-10-02 11:42:17.228035 INFO  /Users/jinglong/Projects/github/myslog/main.go:37 [taskId=tsk-thisisataskid] [tag=mytag] My name is Winterant.
 ```
 
 ### 使用原生slog.Logger
@@ -122,17 +113,12 @@ func GetLogger() *slog.Logger {
 }
 
 func main() {
-	ctx := context.Background()
-
 	slogger := GetLogger()
-
-	ctx = myslog.ContextWithArgs(ctx, "taskId", "tsk-thisisatask")
-
+	ctx := myslog.ContextWithArgs(context.Background(), "taskId", "tsk-thisisatask")
 	slogger.Log(ctx, slog.LevelDebug, "process is starting...")
-
-	name := "Winterant"
-	slogger.Log(ctx, slog.LevelInfo, fmt.Sprintf("My name is %s.", name), "money", "9999999")
+	slogger.Log(ctx, slog.LevelInfo, fmt.Sprintf("My name is %s.", "Winterant"), "money", "9999999")
 }
+
 ```
 
 日志：
